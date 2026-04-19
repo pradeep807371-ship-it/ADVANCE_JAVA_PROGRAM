@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cookie Demo</title>
+    <script>
+        // Function to set cookie
+        function setCookie(name, value, seconds) {
+            const date = new Date();
+            date.setTime(date.getTime() + (seconds * 1000));
+            document.cookie = name + "=" + value + ";expires=" + date.toUTCString() + ";path=/";
+        }
+
+        // Function to get cookie
+        function getCookie(name) {
+            let cookies = document.cookie.split(";");
+            for (let i = 0; i < cookies.length; i++) {
+                let c = cookies[i].trim();
+                if (c.indexOf(name + "=") == 0) {
+                    return c.substring(name.length + 1);
+                }
+            }
+            return "";
+        }
+
+        function handleSubmit() {
+            let name = document.getElementById("username").value;
+
+            let visitCount = getCookie("visitCount");
+            if (visitCount == "") {
+                visitCount = 1;
+            } else {
+                visitCount = parseInt(visitCount) + 1;
+            }
+
+            // Set cookies (expiry = 60 seconds)
+            setCookie("username", name, 60);
+            setCookie("visitCount", visitCount, 60);
+
+            // Display result
+            let output = "<h2>Welcome back " + name + "!</h2>";
+            output += "<p>You have visited this page " + visitCount + " times.</p>";
+
+            // Show all cookies
+            output += "<h3>List of Cookies:</h3>";
+            let allCookies = document.cookie.split(";");
+            for (let i = 0; i < allCookies.length; i++) {
+                output += allCookies[i] + "<br>";
+            }
+
+            output += "<br><b>Note:</b> Cookies expire in 60 seconds.";
+
+            document.getElementById("result").innerHTML = output;
+
+            return false; // prevent form submission
+        }
+    </script>
+</head>
+<body>
+
+    <h2>Enter Your Name</h2>
+
+    <form onsubmit="return handleSubmit();">
+        Name: <input type="text" id="username" required>
+        <br><br>
+        <input type="submit" value="Submit">
+    </form>
+
+    <div id="result"></div>
+
+</body>
+</html>
